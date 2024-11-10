@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp3-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp3
+  template:
+    metadata:
+      labels:
+        app: myapp3
+    spec:
+      volumes: # Define volume
+        - name: shared-image
+          emptyDir: {}
+      containers:
+        - name: myapp-read
+          image: duchong/myapp-read:1.10
+          imagePullPolicy: Always
+          volumeMounts: # Mount volume
+          - name: shared-image
+            mountPath: /usr/src/app/files
+        - name: myapp-write
+          image: duchong/myapp-write:1.10
+          imagePullPolicy: Always
+          volumeMounts: # Mount volume
+          - name: shared-image
+            mountPath: /usr/src/app/files

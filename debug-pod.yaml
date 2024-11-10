@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug-pod
+  labels:
+    purpose: debug
+spec:
+  containers:
+  - name: debug-container
+    image: alpine:latest
+    command:
+      - sleep
+      - "3600"  # Keeps the pod running for 1 hour
+    resources:
+      limits:
+        memory: "100Mi"
+        cpu: "100m"
+    # Install curl, ping, and other tools on pod startup
+  initContainers:
+  - name: install-tools
+    image: alpine:latest
+    command:
+      - sh
+      - -c
+      - |
+        apk update
+        apk add curl wget iputils
+    restartPolicy: Always

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp2-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp2
+  template:
+    metadata:
+      labels:
+        app: myapp2
+    spec:
+      containers:
+        - name: myapp2
+          imagePullPolicy: Always
+          image: duchong/myapp2:1.09
+          env:
+          - name: PORT
+            value: "3000"

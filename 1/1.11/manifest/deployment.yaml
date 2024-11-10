@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp4-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp4
+  template:
+    metadata:
+      labels:
+        app: myapp4
+    spec:
+      volumes: # Define volume
+        - name: shared-image
+          persistentVolumeClaim:
+            claimName: my-storage-claim
+      containers:
+        - name: myapp-write
+          image: duchong/log-output:1.11
+          imagePullPolicy: Always
+          volumeMounts: # Mount volume
+          - name: shared-image
+            mountPath: /usr/src/app/files
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp5-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp5
+  template:
+    metadata:
+      labels:
+        app: myapp5
+    spec:
+      volumes: # Define volume
+        - name: shared-image
+          persistentVolumeClaim:
+            claimName: my-storage-claim
+      containers:
+        - name: myapp-write
+          image: duchong/pingpong:1.11
+          imagePullPolicy: Always
+          volumeMounts: # Mount volume
+          - name: shared-image
+            mountPath: /usr/src/app/files

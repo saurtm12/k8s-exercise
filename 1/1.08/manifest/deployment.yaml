@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp1-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp1
+  template:
+    metadata:
+      labels:
+        app: myapp1
+    spec:
+      containers:
+        - name: myapp1
+          image: duchong/myapp1:1.02
+          env:
+          - name: PORT
+            value: "3000"
