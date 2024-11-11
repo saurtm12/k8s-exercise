@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: log-output2-1-dep
+  namespace: exp
 spec:
   replicas: 1
   selector:
@@ -15,7 +16,7 @@ spec:
       volumes: # Define volume
         - name: shared-image
           persistentVolumeClaim:
-            claimName: my-storage-claim
+            claimName: storage-claim
       containers:
         - name: myapp-write
           image: duchong/log-output:2.1
@@ -33,6 +34,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pingpong2-1-dep
+  namespace: exp
 spec:
   replicas: 1
   selector:
@@ -46,7 +48,7 @@ spec:
       volumes: # Define volume
         - name: shared-image
           persistentVolumeClaim:
-            claimName: my-storage-claim
+            claimName: storage-claim
       containers:
         - name: myapp-write
           image: duchong/pingpong:2.1
