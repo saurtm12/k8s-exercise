@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-output2-1-dep
+  namespace: exp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-output2-1
+  template:
+    metadata:
+      labels:
+        app: log-output2-1
+    spec:
+      volumes: # Define volume
+        - name: shared-image
+          persistentVolumeClaim:
+            claimName: storage-claim
+        - name: config-volume
+          configMap: 
+            name: my-config
+            items: 
+              - key: "text.txt"
+                path: "text.txt"
+      containers:
+        - name: myapp-write
+          image: duchong/log-output:2.6
+          imagePullPolicy: Always
+          volumeMounts: # Mount volume
+          - name: shared-image
+            mountPath: /usr/src/app/files
+          - name: config-volume
+            mountPath: /etc/config
+            readOnly: true
+          env:
+            - name: PORT
+              value: "3000"
+            - name: PINGPONG_SERVICE
+              value: "http://ping-pong-svc:2345"
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: my-config
+                  key: message
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pingpong2-1-dep
+  namespace: exp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp5
+  template:
+    metadata:
+      labels:
+        app: myapp5
+    spec:
+      volumes: # Define volume
+        - name: shared-image
+          persistentVolumeClaim:
+            claimName: storage-claim
+      containers:
+        - name: myapp-write
+          image: duchong/pingpong:2.1
+          imagePullPolicy: Always
+          volumeMounts: # Mount volume
+          - name: shared-image
+            mountPath: /usr/src/app/files
