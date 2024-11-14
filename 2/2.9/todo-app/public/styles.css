@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+.fetched-image {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+#todo-input {
+    padding: 8px;
+    width: 60%;
+    margin-right: 5px;
+}
+
+#add-todo {
+    padding: 8px 16px;
+}
+
+#todo-list {
+    list-style-type: none;
+    padding: 0;
+}

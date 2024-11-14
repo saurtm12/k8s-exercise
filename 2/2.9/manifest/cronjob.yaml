@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: reminder
+spec:
+  schedule: "0 * * * *"  # This runs the job every hour at the start of the hour
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: reminder
+              image: duchong/cronjob:2.9
+          restartPolicy: Never  # Run the job only once per scheduled time

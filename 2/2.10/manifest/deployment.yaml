@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-app-dep
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-app
+  template:
+    metadata:
+      labels:
+        app: todo-app
+    spec:
+      volumes: # Define volume
+        - name: shared-image
+          persistentVolumeClaim:
+            claimName: storage-claim
+      containers:
+        - name: todo-app
+          image: duchong/todo-app:2.2
+          imagePullPolicy: Always
+          env:
+          - name: PORT
+            value: "3000"
+          # volumeMounts: # Mount volume
+          # - name: shared-image
+          #   mountPath: /usr/src/app/files
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-backend-dep
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-backend
+  template:
+    metadata:
+      labels:
+        app: todo-backend
+    spec:
+      volumes: # Define volume
+        - name: shared-image
+          persistentVolumeClaim:
+            claimName: storage-claim
+      containers:
+        - name: todo-backend
+          image: duchong/todo-backend:2.10
+          imagePullPolicy: Always
+          volumeMounts: # Mount volume
+          - name: shared-image
+            mountPath: /usr/src/app/file
+          envFrom:
+            - secretRef:
+                name: db-secret
+          env:
+            - name: POSTGRES_SERVICE
+              value: "postgres-svc"
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: my-config
+                  key: database_name
