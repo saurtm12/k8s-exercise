@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-output2-1-dep
+  namespace: exp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-output2-1
+  template:
+    metadata:
+      labels:
+        app: log-output2-1
+    spec:
+      volumes: # Define volume
+        - name: config-volume
+          configMap: 
+            name: my-config
+            items: 
+              - key: "text.txt"
+                path: "text.txt"
+      containers:
+        - name: myapp-write
+          image: duchong/log-output:3.22
+
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 10
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 10
+
+          imagePullPolicy: Always
+          volumeMounts: # Mount volume
+          - name: config-volume
+            mountPath: /etc/config  
+            readOnly: true
+          env:
+            - name: PORT
+              value: "3000"
+            - name: PINGPONG_SERVICE
+              value: "http://ping-pong-svc:80"
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: my-config
+                  key: message
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pingpong2-1-dep
+  namespace: exp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pingpong
+  template:
+    metadata:
+      labels:
+        app: pingpong
+    spec:
+      volumes: # Define volume
+
+      containers:
+        - name: myapp-write
+          image: duchong/pingpong:3.22
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /pingpong/info
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 10
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /pingpong/info
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 10
+          volumeMounts: # Mount volume
+          envFrom:
+            - secretRef:
+                name: db-secret
+          env:
+            - name: POSTGRES_SERVICE
+              value: "postgres-svc"
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: my-config
+                  key: database_name
