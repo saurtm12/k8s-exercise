@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - example/part3.2/manifest/deployment.yaml
+  - example/part3.2/manifest/service.yaml
+images:
+  - name: PROJECT/IMAGE
+    newName: jakousa/colorcontent
