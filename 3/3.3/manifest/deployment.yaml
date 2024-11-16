@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-app-dep
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-app
+  template:
+    metadata:
+      labels:
+        app: todo-app
+    spec:
+
+      containers:
+        - name: todo-app
+          image: PROJECT/TODO-APP-IMAGE
+          imagePullPolicy: Always
+          env:
+          - name: PORT
+            value: "3000"
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-backend-dep
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-backend
+  template:
+    metadata:
+      labels:
+        app: todo-backend
+    spec:
+      containers:
+        - name: todo-backend
+          image: PROJECT/TODO-BACKEND-IMAGE
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: db-secret
+          env:
+            - name: POSTGRES_SERVICE
+              value: "postgres-svc"
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: my-config
+                  key: database_name
