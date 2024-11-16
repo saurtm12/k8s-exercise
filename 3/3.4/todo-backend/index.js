@@ -27,10 +27,13 @@ const client = new Client({
 client.connect()
   .then(initializeDatabase)
   .then(() => console.log('Connected to PostgreSQL'))
-  .catch(err => console.error('Connection error', err.stack));
+  .catch(err => {
+    console.error('Connection error', err.stack)
+    throw err;
+  });
 
 // Endpoint to add a new TODO
-app.post('/todos', async (req, res) => {
+app.post('/api/todos', async (req, res) => {
   const todo = req.body;
 
   
@@ -53,10 +56,8 @@ app.post('/todos', async (req, res) => {
   }
 });
 
-
-
 // Endpoint to get all TODOs
-app.get('/todos', async (req, res) => {
+app.get('/api/todos', async (req, res) => {
   try {
     const result = await client.query('SELECT * FROM todos');
     const todos = result.rows.map(row => row.description);
@@ -66,11 +67,9 @@ app.get('/todos', async (req, res) => {
     res.status(500).json({ error: 'Could not retrieve todo items' });
   }
 });
-
 app.get("/", (_, res) => {
   return res.send("Hello From todo backend");
 });
-
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
