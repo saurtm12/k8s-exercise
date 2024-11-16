@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  PROJECT_ID: ${{ env.GKE_PROJECT }}
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: dwk-cluster
   GKE_ZONE: europe-north1-b
   IMAGE: dwk-environments
@@ -30,13 +30,14 @@ jobs:
       - name: 'Use gcloud CLI'
         run: gcloud info
 
-      
       - name: 'Get GKE credentials'
         uses: 'google-github-actions/get-gke-credentials@v2'
         with:
           cluster_name: '${{ env.GKE_CLUSTER }}'
           project_id: '${{ env.PROJECT_ID }}'
           location: '${{ env.GKE_ZONE }}'
+
+      - run: gcloud --quiet auth configure-docker
 
       - name: Build
         run: |-
