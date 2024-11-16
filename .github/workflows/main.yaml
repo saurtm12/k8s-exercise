@@ -39,7 +39,10 @@ jobs:
           location: '${{ env.GKE_ZONE }}'
 
       - name: Build
-        run: docker build --tag "gcr.io/$PROJECT_ID/$IMAGE:$BRANCH-$GITHUB_SHA" ./example/part3.2/
+        run: |-
+          IMAGE_TAG="gcr.io/$PROJECT_ID/$IMAGE:$BRANCH-$GITHUB_SHA"
+          echo "Constructed Image Tag: $IMAGE_TAG"
+          docker build --tag "gcr.io/$PROJECT_ID/$IMAGE:$BRANCH-$GITHUB_SHA" ./example/part3.2/
 
       - name: Publish
         run: docker push "gcr.io/$PROJECT_ID/$IMAGE:$BRANCH-$GITHUB_SHA"

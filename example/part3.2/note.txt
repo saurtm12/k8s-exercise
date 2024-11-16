@@ -1,0 +1,2 @@
+gcloud artifacts repositories list --location=us --project=dwk-gke-441712
+gcloud artifacts repositories create gcr.io     --repository-format=docker     --location=us     --description="Docker repository for my images"
