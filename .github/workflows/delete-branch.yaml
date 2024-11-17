@@ -40,6 +40,7 @@ jobs:
 
       - name: Clean up
         run: |-
+          echo "cleaning up branch $GITHUB_REF"
           kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
           kustomize edit set namespace ${GITHUB_REF#refs/heads/}
           kubectl delete -k .
