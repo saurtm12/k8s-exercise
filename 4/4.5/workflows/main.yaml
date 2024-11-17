@@ -43,22 +43,18 @@ jobs:
           echo "TODO_APP_IMAGE_TAG=gcr.io/$PROJECT_ID/todo-app:$IMAGE_RELEASE" >> $GITHUB_ENV
           echo "TODO_BACKEND_IMAGE_TAG=gcr.io/$PROJECT_ID/todo-backend:$IMAGE_RELEASE" >> $GITHUB_ENV
           echo "TODO_CRON_IMAGE_TAG=gcr.io/$PROJECT_ID/todo-cron:$IMAGE_RELEASE" >> $GITHUB_ENV
-          echo "PINGPONG_IMAGE_TAG=gcr.io/$PROJECT_ID/pingpong:$IMAGE_RELEASE" >> $GITHUB_ENV
-          echo "LOG_OUTPUT_IMAGE_TAG=gcr.io/$PROJECT_ID/log-output:$IMAGE_RELEASE" >> $GITHUB_ENV
+
       - name: Build TODO images
         run: |-
-          docker build --tag $TODO_APP_IMAGE_TAG ./4/4.5/todo-app/
-          docker build --tag $TODO_BACKEND_IMAGE_TAG ./4/4.5/todo-backend/
-          docker build --tag $TODO_CRON_IMAGE_TAG ./4/4.5/cronjob/
-          docker build --tag $PINGPONG_IMAGE_TAG ./4/4.1/pingpong/
-          docker build --tag $LOG_OUTPUT_IMAGE_TAG ./4/4.1/log-output/
+          docker build --tag $TODO_APP_IMAGE_TAG ./3/3.7/todo-app/
+          docker build --tag $TODO_BACKEND_IMAGE_TAG ./3/3.7/todo-backend/
+          docker build --tag $TODO_CRON_IMAGE_TAG ./3/3.7/cronjob/
+
       - name: Publish TODO images
         run: |-
           docker push $TODO_APP_IMAGE_TAG
           docker push $TODO_BACKEND_IMAGE_TAG
           docker push $TODO_CRON_IMAGE_TAG
-          docker push $PINGPONG_IMAGE_TAG 
-          docker push $LOG_OUTPUT_IMAGE_TAG 
 
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
@@ -67,20 +63,12 @@ jobs:
         run: |-
           kubectl create namespace ${GITHUB_REF#refs/heads/} || true
           kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
+          kustomize edit set image PROJECT/TODO-APP-IMAGE=$TODO_APP_IMAGE_TAG
           kustomize edit set namespace ${GITHUB_REF#refs/heads/}
 
-          kustomize edit set image PROJECT/TODO-APP-IMAGE=$TODO_APP_IMAGE_TAG
           kustomize edit set image PROJECT/TODO-BACKEND-IMAGE=$TODO_BACKEND_IMAGE_TAG
           kustomize edit set image PROJECT/TODO-CRON-IMAGE=$TODO_CRON_IMAGE_TAG
-          kustomize edit set image PROJECT/PINGPONG-IMAGE=$PINGPONG_IMAGE_TAG
-          kustomize edit set image PROJECT/LOG-OUTPUT-IMAGE=$LOG_OUTPUT_IMAGE_TAG
 
           kustomize build . | kubectl apply -f -
           kubectl rollout status deployment $SERVICE
           kubectl get services -o wide
-        
-      - name: commit kustomization.yaml to GitHub
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: 'kustomization.yaml'
-          message: New version released ${{ github.sha }}

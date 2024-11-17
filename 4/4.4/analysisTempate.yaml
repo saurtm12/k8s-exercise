@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: namespace-cpu-usage-monitor
+spec:
+  metrics:
+  - name: cpu-usage-rate-sum
+    interval: 60s
+    count: 10 
+    successCondition: result < 1000 
+    failureCondition: result >= 1000
+    provider:
+      prometheus:
+        address: http://kube-prometheus-stack-1731-prometheus.prometheus.svc.cluster.local # Replace with your Prometheus service
+        query: |
+          sum(rate(container_cpu_usage_seconds_total{namespace="project"}[1m])) 
+  args:
+  - name: max-cpu-usage
+    value: "1000" # Adjust as appropriate for your environment
+  
+  # Safety to ensure value isn't set too low
+  - name: safety-threshold
+    value: "500" # Minimum allowed threshold
+
+  templateArguments:
+    - name: cpu-usage-rate-sum
+      value: "{{ args.max-cpu-usage }}"
+  dryRun:
+  - clusterScope: false 
