@@ -4,7 +4,12 @@ on:
   delete:
     branches:
       - '**'
-
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: dwk-cluster
+  GKE_ZONE: europe-north1-b
+  BRANCH: ${{ github.ref_name }}
+  
 jobs:
   delete-environment:
     runs-on: ubuntu-latest
