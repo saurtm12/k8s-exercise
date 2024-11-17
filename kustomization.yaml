@@ -7,8 +7,8 @@ resources:
   - 3/3.4/manifest/statefulSet.yaml
   - 3/3.4/manifest/deployment.yaml
   - 3/3.4/manifest/service.yaml
-  - 3/3.4/manifest/ingress.yaml
   - 3/3.4/manifest/cronjob.yaml
+  - 3/3.4/manifest/ingress.yaml
 images:
   - name: PROJECT/TODO-APP-IMAGE
     newName: duchong/todo-app:3.4
