@@ -75,9 +75,7 @@ jobs:
           kustomize edit set image PROJECT/PINGPONG-IMAGE=$PINGPONG_IMAGE_TAG
           kustomize edit set image PROJECT/LOG-OUTPUT-IMAGE=$LOG_OUTPUT_IMAGE_TAG
 
-          kustomize build ./overlays/prod | kubectl apply -f -
-          kubectl rollout status deployment $SERVICE
-          kubectl get services -o wide
+          kustomize build ./overlays/prod
         if: github.ref == 'refs/heads/master'
 
       - name: commit kustomization.yaml to GitHub
