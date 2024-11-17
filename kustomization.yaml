@@ -10,13 +10,19 @@ resources:
 - 4/4.5/manifest/cronjob.yaml
 - 4/4.5/manifest/ingress.yaml
 images:
-- name: PROJECT/TODO-APP-IMAGE
-  newName: duchong/todo-app:3.4
-- name: PROJECT/TODO-BACKEND-IMAGE
-  newName: duchong/todo-backend:3.41
-- name: PROJECT/TODO-CRON-IMAGE
-  newName: duchong/cronjob:3.73
-- name: PROJECT/PINGPONG-IMAGE
-  newName: duchong/pingpong:3.22
 - name: PROJECT/LOG-OUTPUT-IMAGE
-  newName: duchong/log-output:3.22
+  newName: gcr.io/dwk-gke-441712/log-output
+  newTag: test1-d34b4f2989789d5cf902948bb696c19fc400bc86
+- name: PROJECT/PINGPONG-IMAGE
+  newName: gcr.io/dwk-gke-441712/pingpong
+  newTag: test1-d34b4f2989789d5cf902948bb696c19fc400bc86
+- name: PROJECT/TODO-APP-IMAGE
+  newName: gcr.io/dwk-gke-441712/todo-app
+  newTag: test1-d34b4f2989789d5cf902948bb696c19fc400bc86
+- name: PROJECT/TODO-BACKEND-IMAGE
+  newName: gcr.io/dwk-gke-441712/todo-backend
+  newTag: test1-d34b4f2989789d5cf902948bb696c19fc400bc86
+- name: PROJECT/TODO-CRON-IMAGE
+  newName: gcr.io/dwk-gke-441712/todo-cron
+  newTag: test1-d34b4f2989789d5cf902948bb696c19fc400bc86
+namespace: test1
