@@ -8,7 +8,7 @@ env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: dwk-cluster
   GKE_ZONE: europe-north1-b
-  BRANCH: ${{ github.ref_name }}
+  BRANCH: ${{ github.event.ref }}
   
 jobs:
   delete-environment:
@@ -40,9 +40,9 @@ jobs:
 
       - name: Clean up
         run: |-
-          echo "cleaning up branch ${{ github.event.ref }}"
-          kubectl config set-context --current --namespace=${{ github.event.ref#refs/heads/ }}
-          kustomize edit set namespace ${{ github.event.ref#refs/heads/ }}
+          echo "cleaning up branch ${BRANCH#refs/heads/}"
+          kubectl config set-context --current --namespace=${BRANCH#refs/heads/}
+          kustomize edit set namespace ${BRANCH#refs/heads/}
           kubectl delete -k .
           kubectl rollout status deployment $SERVICE
           kubectl get services -o wide
