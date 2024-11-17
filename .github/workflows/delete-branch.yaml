@@ -1,0 +1,42 @@
+name: Delete Environment
+
+on:
+  delete:
+    branches:
+      - '**'
+
+jobs:
+  delete-environment:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the repository (optional if you need repo content)
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GKE_SA_KEY }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: 'Use gcloud CLI'
+        run: gcloud info
+
+      - name: 'Get GKE credentials'
+        uses: 'google-github-actions/get-gke-credentials@v2'
+        with:
+          cluster_name: '${{ env.GKE_CLUSTER }}'
+          project_id: '${{ env.PROJECT_ID }}'
+          location: '${{ env.GKE_ZONE }}'
+
+      - name: Set up Kustomize
+        uses: imranismail/setup-kustomize@v2.1.0
+
+      - name: Clean up
+        run: |-
+          kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
+          kustomize edit set namespace ${GITHUB_REF#refs/heads/}
+          kubectl delete -k ./kustomization.yaml
+          kubectl rollout status deployment $SERVICE
+          kubectl get services -o wide
