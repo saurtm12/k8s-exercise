@@ -1,4 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 resources:
-  - ../../base
+- ../../base
 patches:
-  - namespace.yaml
+- path: namespace.yaml
+images:
+- name: PROJECT/LOG-OUTPUT-IMAGE
+  newName: duchong/log-output:3.22
+- name: PROJECT/PINGPONG-IMAGE
+  newName: duchong/pingpong:3.22
+- name: PROJECT/TODO-APP-IMAGE
+  newName: duchong/todo-app
+  newTag: "3.4"
+- name: PROJECT/TODO-BACKEND-IMAGE
+  newName: duchong/todo-backend:3.41
+- name: PROJECT/TODO-CRON-IMAGE
+  newName: duchong/cronjob:3.73
