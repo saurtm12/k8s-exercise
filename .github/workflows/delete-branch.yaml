@@ -42,6 +42,6 @@ jobs:
         run: |-
           kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
           kustomize edit set namespace ${GITHUB_REF#refs/heads/}
-          kubectl delete -k ./kustomization.yaml
+          kubectl delete -k .
           kubectl rollout status deployment $SERVICE
           kubectl get services -o wide
