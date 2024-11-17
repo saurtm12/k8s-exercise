@@ -63,7 +63,7 @@ jobs:
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
 
-      - name: Deploy to staging
+      - name: Deploy
         run: |-
           kubectl create namespace ${GITHUB_REF#refs/heads/} || true
           kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
@@ -75,11 +75,10 @@ jobs:
           kustomize edit set image PROJECT/PINGPONG-IMAGE=$PINGPONG_IMAGE_TAG
           kustomize edit set image PROJECT/LOG-OUTPUT-IMAGE=$LOG_OUTPUT_IMAGE_TAG
 
-          kustomize build ./overlays/prod | kubectl apply -f -
+          kustomize build . | kubectl apply -f -
           kubectl rollout status deployment $SERVICE
           kubectl get services -o wide
-        if: github.ref == 'refs/heads/master'
-
+        
       - name: commit kustomization.yaml to GitHub
         uses: EndBug/add-and-commit@v9
         with:
