@@ -65,13 +65,14 @@ jobs:
 
       - name: Deploy to staging
         run: |-
+          cd overlays/prod
           kustomize edit set image PROJECT/TODO-APP-IMAGE=$TODO_APP_IMAGE_TAG
           kustomize edit set image PROJECT/TODO-BACKEND-IMAGE=$TODO_BACKEND_IMAGE_TAG
           kustomize edit set image PROJECT/TODO-CRON-IMAGE=$TODO_CRON_IMAGE_TAG
           kustomize edit set image PROJECT/PINGPONG-IMAGE=$PINGPONG_IMAGE_TAG
           kustomize edit set image PROJECT/LOG-OUTPUT-IMAGE=$LOG_OUTPUT_IMAGE_TAG
 
-          kustomize build ./overlays/prod
+          kustomize build .
         if: github.ref == 'refs/heads/master'
 
       - name: commit kustomization.yaml to GitHub

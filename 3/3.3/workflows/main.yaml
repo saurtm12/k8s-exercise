@@ -39,7 +39,7 @@ jobs:
         run: |-
           gcloud --quiet auth configure-docker
           export IMAGE_RELEASE=${BRANCH}-${GITHUB_SHA}
-        echo "IMAGE_RELEASE=$IMAGE_RELEASE" >> $GITHUB_ENV
+          echo "IMAGE_RELEASE=$IMAGE_RELEASE" >> $GITHUB_ENV
           echo "TODO_APP_IMAGE_TAG=gcr.io/$PROJECT_ID/todo-app:$IMAGE_RELEASE" >> $GITHUB_ENV
           echo "TODO_BACKEND_IMAGE_TAG=gcr.io/$PROJECT_ID/todo-backend:$IMAGE_RELEASE" >> $GITHUB_ENV
           echo "TODO_CRON_IMAGE_TAG=gcr.io/$PROJECT_ID/todo-cron:$IMAGE_RELEASE" >> $GITHUB_ENV
