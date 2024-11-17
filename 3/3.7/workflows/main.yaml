@@ -46,9 +46,9 @@ jobs:
 
       - name: Build TODO images
         run: |-
-          docker build --tag $TODO_APP_IMAGE_TAG ./3/3.4/todo-app/
-          docker build --tag $TODO_BACKEND_IMAGE_TAG ./3/3.4/todo-backend/
-          docker build --tag $TODO_CRON_IMAGE_TAG ./3/3.4/cronjob/
+          docker build --tag $TODO_APP_IMAGE_TAG ./3/3.7/todo-app/
+          docker build --tag $TODO_BACKEND_IMAGE_TAG ./3/3.7/todo-backend/
+          docker build --tag $TODO_CRON_IMAGE_TAG ./3/3.7/cronjob/
 
       - name: Publish TODO images
         run: |-

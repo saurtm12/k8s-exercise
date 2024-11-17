@@ -44,7 +44,7 @@ echo "Uploading backup to GCS bucket: $GCS_BUCKET..."
 gsutil cp "$BACKUP_FILE" "gs://$GCS_BUCKET/db_backup_$(date +%Y-%m-%d-%H-%M).sql"
 
 if [[ $? -eq 0 ]]; then
-  echo "Backup uploaded successfully to gs://$GCS_BUCKET/db_backup_$(date +%Y-%m-%d).sql"
+  echo "Backup uploaded successfully to gs://$GCS_BUCKET/db_backup_$(date +%Y-%m-%d-%H-%M).sql"
 else
   echo "Failed to upload the backup to GCS"
   exit 1
