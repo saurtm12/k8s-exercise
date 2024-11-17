@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: reminder
+  namespace: project
+spec:
+  schedule: "24 * * * *"  # This runs the job every hour at the start of the hour
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: reminder
+              image: PROJECT/TODO-CRON-IMAGE
+              imagePullPolicy: Always
+              env:
+              - name: POSTGRES_SERVICE
+                value: "postgres-svc"
+              - name: GCS_BUCKET
+                value: "mycluster-bucket-dwk-gke1"
+              - name: POSTGRES_DB
+                valueFrom:
+                  configMapKeyRef:
+                    name: my-config
+                    key: database_name
+              - name: POSTGRES_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: db-secret
+                    key: POSTGRES_USER
+              - name: PGPASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: db-secret
+                    key: POSTGRES_PASSWORD
+              volumeMounts:
+              - name: secret-volume
+                mountPath: /credentials/key.json
+                subPath: key.json
+                readOnly: true    
+          restartPolicy: Never  # Run the job only once per scheduled time
+          volumes:
+          - name: secret-volume
+            secret:
+              secretName: ggc-secret
