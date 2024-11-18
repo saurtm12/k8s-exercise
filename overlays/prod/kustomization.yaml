@@ -6,16 +6,16 @@ namespace: prod-namespace
 images:
 - name: PROJECT/LOG-OUTPUT-IMAGE
   newName: gcr.io/dwk-gke-441712/log-output
-  newTag: master-012792da349bcccea978d8bda535a32d0f95e2f1
+  newTag: master-51d84d001f576617051e55a691a5c3236141a672
 - name: PROJECT/PINGPONG-IMAGE
   newName: gcr.io/dwk-gke-441712/pingpong
-  newTag: master-012792da349bcccea978d8bda535a32d0f95e2f1
+  newTag: master-51d84d001f576617051e55a691a5c3236141a672
 - name: PROJECT/TODO-APP-IMAGE
   newName: gcr.io/dwk-gke-441712/todo-app
-  newTag: master-012792da349bcccea978d8bda535a32d0f95e2f1
+  newTag: master-51d84d001f576617051e55a691a5c3236141a672
 - name: PROJECT/TODO-BACKEND-IMAGE
   newName: gcr.io/dwk-gke-441712/todo-backend
-  newTag: master-012792da349bcccea978d8bda535a32d0f95e2f1
+  newTag: master-51d84d001f576617051e55a691a5c3236141a672
 - name: PROJECT/TODO-CRON-IMAGE
   newName: gcr.io/dwk-gke-441712/todo-cron
-  newTag: master-012792da349bcccea978d8bda535a32d0f95e2f1
+  newTag: master-51d84d001f576617051e55a691a5c3236141a672
