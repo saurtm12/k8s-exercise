@@ -5,12 +5,17 @@ resources:
 namespace: prod-namespace
 images:
 - name: PROJECT/LOG-OUTPUT-IMAGE
-  newName: e
+  newName: gcr.io/dwk-gke-441712/log-output
+  newTag: master-012792da349bcccea978d8bda535a32d0f95e2f1
 - name: PROJECT/PINGPONG-IMAGE
-  newName: d
+  newName: gcr.io/dwk-gke-441712/pingpong
+  newTag: master-012792da349bcccea978d8bda535a32d0f95e2f1
 - name: PROJECT/TODO-APP-IMAGE
-  newName: a
+  newName: gcr.io/dwk-gke-441712/todo-app
+  newTag: master-012792da349bcccea978d8bda535a32d0f95e2f1
 - name: PROJECT/TODO-BACKEND-IMAGE
-  newName: b
+  newName: gcr.io/dwk-gke-441712/todo-backend
+  newTag: master-012792da349bcccea978d8bda535a32d0f95e2f1
 - name: PROJECT/TODO-CRON-IMAGE
-  newName: c
+  newName: gcr.io/dwk-gke-441712/todo-cron
+  newTag: master-012792da349bcccea978d8bda535a32d0f95e2f1
