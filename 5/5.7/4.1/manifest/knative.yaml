@@ -1,0 +1,55 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: log-output2-1-dep
+  namespace: exp1
+spec:
+  template:
+    spec:
+      volumes: # Define volume
+        - name: config-volume
+          configMap: 
+            name: my-config
+            items: 
+              - key: "text.txt"
+                path: "text.txt"
+      containers:
+      - image: duchong/log-output:3.22
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config  
+          readOnly: true
+        env:
+        - name: PINGPONG_SERVICE
+          value: "http://ping-pong-svc:80"
+        - name: MESSAGE
+          valueFrom:
+            configMapKeyRef:
+              name: my-config
+              key: message
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: pingpong2-1-dep
+  namespace: exp1
+spec:
+  template:
+    spec:
+      containers:
+      - image: duchong/pingpong:3.22
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - secretRef:
+            name: db-secret
+        env:
+        - name: POSTGRES_SERVICE
+          value: "postgres-svc"
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: my-config
+              key: database_name

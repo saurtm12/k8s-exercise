@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-config
+  namespace: exp1
+data:
+  message: "hello world"
+  text.txt: |
+    this text is from file
+  database_name: mydatabase

@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wikipedia-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wikipedia-server
+  template:
+    metadata:
+      labels:
+        app: wikipedia-server
+    spec:
+      volumes:
+        - name: wikipedia-content
+          emptyDir: {}
+
+      containers:
+        # Main nginx container to serve Wikipedia content
+        - name: nginx
+          image: nginx:latest
+          volumeMounts:
+            - name: wikipedia-content
+              mountPath: /usr/share/nginx/html
+          ports:
+            - containerPort: 80
+
+        # Sidecar container that fetches random Wikipedia pages
+        - name: sidecar
+          image: curlimages/curl:latest
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+                while true; do
+                  # Wait for a random time between 5 and 15 minutes
+                  sleep $((5 + RANDOM % 11))m
+                  # Fetch a random Wikipedia page and save it to the shared volume
+                  curl -s https://en.wikipedia.org/wiki/Special:Random -o /wikipedia-content/random.html
+                done
+          volumeMounts:
+            - name: wikipedia-content
+              mountPath: /wikipedia-content
+
+      initContainers:
+        # Init container that fetches the Kubernetes Wikipedia page
+        - name: init-container
+          image: curlimages/curl:latest
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+                curl -s https://en.wikipedia.org/wiki/Kubernetes -o /wikipedia-content/kubernetes.html
+          volumeMounts:
+            - name: wikipedia-content
+              mountPath: /wikipedia-content
