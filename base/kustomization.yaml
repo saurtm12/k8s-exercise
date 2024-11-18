@@ -2,21 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ./namespace.yaml
-- ../4/4.5/manifest/configMap.yaml
-- ../4/4.5/manifest/secret.yaml
-- ../4/4.5/manifest/statefulSet.yaml
-- ../4/4.5/manifest/deployment.yaml
-- ../4/4.5/manifest/service.yaml
-- ../4/4.5/manifest/cronjob.yaml
-- ../4/4.5/manifest/ingress.yaml
-images:
-- name: PROJECT/TODO-APP-IMAGE
-  newName: duchong/todo-app:3.4
-- name: PROJECT/TODO-BACKEND-IMAGE
-  newName: duchong/todo-backend:3.41
-- name: PROJECT/TODO-CRON-IMAGE
-  newName: duchong/cronjob:3.73
-- name: PROJECT/PINGPONG-IMAGE
-  newName: duchong/pingpong:3.22
-- name: PROJECT/LOG-OUTPUT-IMAGE
-  newName: duchong/log-output:3.22
+- ./configMap.yaml
+- ./secret.yaml
+- ./statefulSet.yaml
+- ./deployment.yaml
+- ./service.yaml
+- ./cronjob.yaml
+- ./ingress.yaml
